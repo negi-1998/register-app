@@ -41,15 +41,17 @@ pipeline {
       }
     }
 
-    stage("Sonarqube analysis"){
-      steps{
-        script{
-          withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token'){
-            sh "mvn sonar:sonar"
-          }
-        }
-      }
+    stage("Quality Gate"){
+  steps{
+    script{
+      def qg = waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
+      echo "Quality Gate Status: ${qg.status}"
+      echo "Quality Gate Conditions: ${qg.conditions}"
+      echo "Quality Gate Error: ${qg.error}"
     }
+  }
+}
+
 
     stage("Quality Gate"){
       steps{
