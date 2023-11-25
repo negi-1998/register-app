@@ -42,34 +42,25 @@ pipeline {
     }
 
     stage("Quality Gate"){
-  steps{
-    script{
-      def qg = waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
-      echo "Quality Gate Status: ${qg.status}"
-      echo "Quality Gate Conditions: ${qg.conditions}"
-      echo "Quality Gate Error: ${qg.error}"
-    }
-  }
-}
-
-
-    stage("Quality Gate"){
       steps{
         script{
-          waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
+          def qg = waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
+          echo "Quality Gate Status: ${qg.status}"
+          echo "Quality Gate Conditions: ${qg.conditions}"
+          echo "Quality Gate Error: ${qg.error}"
         }
       }
     }
 
-   stage("Build and Push Docker Image"){
-     steps{
-       script{
-         docker.withRegistry('', DOCKER_PASS){
-           docker_image.push("${IMAGE_TAG}")
-           docker_image.push('latest')
-         }
-       }
-     }
-   }
+    stage("Build and Push Docker Image"){
+      steps{
+        script{
+          docker.withRegistry('', DOCKER_PASS){
+            docker_image.push("${IMAGE_TAG}")
+            docker_image.push('latest')
+          }
+        }
+      }
+    }
   }
 }
