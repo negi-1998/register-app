@@ -41,6 +41,14 @@ pipeline {
       }
     }
 
+    stage("SonarQube analysis") {
+            steps {
+                withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
+                    sh "mvn sonar:sonar"
+                }
+            }
+    }
+
     stage("Quality Gate"){
       steps{
         script{
