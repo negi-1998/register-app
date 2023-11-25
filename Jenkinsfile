@@ -49,7 +49,12 @@ pipeline {
             }
     }
 
-    sleep 15
+    stage("Delay") {
+      steps {
+        sleep 15
+      }
+    }
+    
     stage("Quality Gate"){
       steps{
         script{
